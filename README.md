@@ -1,137 +1,299 @@
----
-annotations_creators:
-- expert-generated
-language_creators:
-- expert-generated
-language:
-- en
-license:
-- mit
-multilinguality:
-- monolingual
-size_categories:
-- 1K<n<10K
-source_datasets:
-- original
-task_categories:
-- image-classification
-task_ids:
-- multi-class-image-classification
-pretty_name: Beans
-dataset_info:
-  features:
-  - name: image_file_path
-    dtype: string
-  - name: image
-    dtype: image
-  - name: labels
-    dtype:
-      class_label:
-        names:
-          '0': angular_leaf_spot
-          '1': bean_rust
-          '2': healthy
-  splits:
-  - name: train
-    num_bytes: 382110
-    num_examples: 1034
-  - name: validation
-    num_bytes: 49711
-    num_examples: 133
-  - name: test
-    num_bytes: 46584
-    num_examples: 128
-  download_size: 180024906
-  dataset_size: 478405
+# 🌱 MLOps-TeamBeans
+
+<div align="center">
+
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.1.0-red.svg)
+![MLflow](https://img.shields.io/badge/MLflow-2.8.0-blue.svg)
+![DVC](https://img.shields.io/badge/DVC-3.0.0+-orange.svg)
+
+**A Production-Ready MLOps Pipeline for Bean Disease Classification**
+
+[Features](#-features) • [Architecture](#-architecture) • [Getting Started](#-getting-started) • [Model](#-model) • [Pipeline](#-pipeline) • [Web App](#-web-application)
+
+</div>
+
 ---
 
-## Table of Contents
-- [Table of Contents](#table-of-contents)
-- [Dataset Description](#dataset-description)
-  - [Dataset Summary](#dataset-summary)
-  - [Supported Tasks and Leaderboards](#supported-tasks-and-leaderboards)
-  - [Languages](#languages)
-- [Dataset Structure](#dataset-structure)
-  - [Data Instances](#data-instances)
-  - [Data Fields](#data-fields)
-  - [Data Splits](#data-splits)
-- [Source Data](#source-data)
-- [Data Author](#data-author)
-## Dataset Description
+## 📋 Overview
 
-- **Repository:** [MLOps-essi-upc/MLOps-TeamBeans](https://github.com/MLOps-essi-upc/MLOps-TeamBeans)
-- **Paper:** N/A
-- **Leaderboard:** N/A
-- **Point of Contact:** N/A
+An end-to-end MLOps project implementing a **deep learning pipeline** for classifying bean leaf diseases. This project demonstrates best practices in machine learning operations, including experiment tracking, data versioning, validation, model monitoring, and deployment.
 
-### Dataset Summary
+The model classifies bean leaf images into three categories:
+- 🔴 **Angular Leaf Spot** - Bacterial disease caused by *Pseudomonas syringae pv. lachrymans*
+- 🟤 **Bean Rust** - Fungal disease caused by *Uromyces phaseoli typica*
+- 🟢 **Healthy** - No disease detected
 
-Beans leaf dataset with images of diseased and health leaves. Each image is 500 x 500 RGB. Dataset is balanced in terms of classes. There are 3 types of classes, 2 of them being diseased leafs and one being healthy: 
-- Angular Leaf Spot which is a bacterial disease caused by Pseudomonas syringae pv.lachrymans
-- Bean Rust which is caused by Uromyces phaseoli typica. 
-- Healthy
+## ✨ Features
 
-### Supported Tasks and Leaderboards
+### 🔬 **ML Pipeline**
+- **Deep Learning Model**: Custom CNN architecture (2 Conv + 2 FC layers)
+- **PyTorch Implementation**: Modern deep learning framework
+- **Balanced Dataset**: 1,295 images (500×500 RGB) across 3 classes
 
-- `image-classification`: Based on a leaf image, the goal of this task is to predict the disease type (Angular Leaf Spot and Bean Rust), if any.
+### 🛠️ **MLOps Tools & Practices**
+- **Experiment Tracking**: MLflow for metrics, parameters, and model versioning
+- **Data Version Control**: DVC for reproducible data pipelines
+- **Data Validation**: 
+  - Great Expectations for schema and quality checks
+  - DeepChecks for ML-specific validations
+- **Pipeline Automation**: DVC pipelines for end-to-end workflow
+- **Carbon Tracking**: CodeCarbon for environmental impact monitoring
+- **Testing**: Pytest suite for model and API validation
 
-### Languages
+### 🚀 **Deployment**
+- **Web Application**: Flask-based interface for predictions
+- **REST API**: FastAPI backend for model serving
+- **Containerization**: Docker support for frontend and backend
+- **Notebooks**: Jupyter notebooks for exploratory analysis
 
-English
-
-## Dataset Structure
-
-### Data Instances
-
-A sample from the training set is provided below:
+## 🏗️ Architecture
 
 ```
-{
-    'image_file_path': '/root/.cache/huggingface/datasets/downloads/extracted/0aaa78294d4bf5114f58547e48d91b7826649919505379a167decb629aa92b0a/train/bean_rust/bean_rust_train.109.jpg',
-    'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=500x500 at 0x16BAA72A4A8>,
-    'labels': 1
-}
+┌─────────────────┐
+│  Data Source    │
+│  (HuggingFace)  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Data Validation │
+│ Great Expect.   │
+│ DeepChecks      │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐      ┌──────────────┐
+│ Data Processing │◄─────┤     DVC      │
+│   DataLoaders   │      │   Pipeline   │
+└────────┬────────┘      └──────────────┘
+         │
+         ▼
+┌─────────────────┐      ┌──────────────┐
+│ Model Training  │◄────►│    MLflow    │
+│   PyTorch CNN   │      │   Tracking   │
+└────────┬────────┘      └──────────────┘
+         │
+         ▼
+┌─────────────────┐
+│    Evaluation   │
+│ Test Metrics    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────────────┐
+│       Deployment            │
+│  ┌──────────┐  ┌─────────┐ │
+│  │ FastAPI  │  │  Flask  │ │
+│  │   API    │  │  Web UI │ │
+│  └──────────┘  └─────────┘ │
+└─────────────────────────────┘
 ```
 
-### Data Fields
+## 📁 Project Structure
 
-The data instances have the following fields:
-
-- `image_file_path`: a `string` filepath to an image.
-- `image`: A `PIL.Image.Image` object containing the image. Note that when accessing the image column: `dataset[0]["image"]` the image file is automatically decoded. Decoding of a large number of image files might take a significant amount of time. Thus it is important to first query the sample index before the `"image"` column, *i.e.* `dataset[0]["image"]` should **always** be preferred over `dataset["image"][0]`.
-- `labels`: an `int` classification label.
-
-Class Label Mappings:
-
-```json
-{
-  "angular_leaf_spot": 0,
-  "bean_rust": 1,
-  "healthy": 2,
-}
+```
+MLOps-TeamBeans/
+├── src/
+│   ├── data/              # Data loading and validation
+│   │   ├── load_data.py
+│   │   ├── make_dataset.py
+│   │   └── deepchecks_validations.py
+│   ├── features/          # Feature engineering and validation
+│   │   ├── build_features.py
+│   │   └── gx/            # Great Expectations configs
+│   ├── models/            # Model training and evaluation
+│   │   ├── model.py
+│   │   ├── train_model.py
+│   │   └── test_model.py
+│   ├── app/               # FastAPI application
+│   │   └── api.py
+│   └── web/               # Flask web interface
+│       ├── app.py
+│       └── templates/
+├── notebooks/             # Jupyter notebooks for analysis
+├── tests/                 # Test suite
+├── mlruns/               # MLflow experiment tracking
+├── dvc.yaml              # DVC pipeline definition
+└── requirements.txt      # Python dependencies
 ```
 
-### Data Splits
+## 🚀 Getting Started
 
- 
-|             |train|validation|test|
-|-------------|----:|---------:|---:|
-|# of examples|1034 |133       |128 |
+### Prerequisites
 
+- Python 3.8+
+- pip or conda
+- Git
+- (Optional) Docker for containerized deployment
 
-## Source Data
+### Installation
 
-The data has been sourced from repository at huggingface (https://huggingface.co/datasets/beans)
-
-
-## Data Author
-```
-@ONLINE {beansdata,
-    author="Makerere AI Lab",
-    title="Bean disease dataset",
-    month="January",
-    year="2020",
-    url="https://github.com/AI-Lab-Makerere/ibean/"
-}
+1. **Clone the repository**
+```bash
+git clone https://github.com/MLOps-essi-upc/MLOps-TeamBeans.git
+cd MLOps-TeamBeans
 ```
 
+2. **Create a virtual environment**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Pull data with DVC**
+```bash
+dvc pull
+```
+
+### 🏃 Quick Start
+
+#### Run the Complete Pipeline
+
+```bash
+dvc repro
+```
+
+This executes the full pipeline:
+1. **make_dataset**: Process raw data into PyTorch dataloaders
+2. **train**: Train the CNN model with MLflow tracking
+3. **evaluate**: Test model performance and generate metrics
+
+#### Start MLflow UI
+
+```bash
+mlflow ui
+```
+Access at `http://localhost:5000` to view experiments, metrics, and model artifacts.
+
+#### Run the Web Application
+
+```bash
+python src/web/app.py
+```
+Access at `http://localhost:5001` to upload images and get predictions.
+
+#### Start the FastAPI Server
+
+```bash
+uvicorn src.app.api:app --reload
+```
+API available at `http://localhost:8000` with interactive docs at `/docs`.
+
+## 🤖 Model
+
+### Architecture: BeansTeam 2CL+2FL
+
+- **Input**: 500×500×3 RGB images
+- **Layers**:
+  - 2 Convolutional layers (2D) with ReLU activation
+  - 2 Fully connected layers
+  - LogSoftmax output layer (3 neurons)
+- **Framework**: PyTorch 2.1.0
+- **Loss Function**: Negative Log-Likelihood Loss
+- **Optimizer**: Adam
+
+### Training Details
+
+- **Dataset Split**:
+  - Training: 1,034 images
+  - Validation: 133 images
+  - Test: 128 images
+- **Monitoring**: Carbon emissions tracked with CodeCarbon
+- **Experiment Tracking**: All runs logged to MLflow
+
+See [BeansTeam 2CL+2FL_model_card.md](BeansTeam%202CL+2FL_model_card.md) for complete model documentation.
+
+## 🔄 Pipeline
+
+The project uses **DVC** for pipeline orchestration:
+
+```yaml
+Stages:
+  make_dataset → train → evaluate
+```
+
+Each stage:
+- Tracks dependencies (data, code)
+- Generates versioned outputs
+- Enables reproducibility
+
+**Run individual stages:**
+```bash
+dvc repro make_dataset
+dvc repro train
+dvc repro evaluate
+```
+
+## 📊 Data
+
+### Dataset Details
+
+- **Source**: HuggingFace Beans Dataset
+- **Size**: 1,295 images
+- **Format**: 500×500 RGB JPEG
+- **Balance**: Evenly distributed across 3 classes
+- **License**: MIT
+
+### Data Validation
+
+**Great Expectations**: Schema validation, statistical checks, and data quality assertions
+```bash
+great_expectations checkpoint run checkpoint_train
+```
+
+**DeepChecks**: ML-specific validations including distribution checks and label integrity
+
+## 🧪 Testing
+
+```bash
+pytest tests/
+```
+
+Test coverage includes:
+- Model architecture and forward pass
+- API endpoints (FastAPI & Flask)
+- MLflow logging functionality
+- Training pipeline components
+
+## 🐳 Docker Deployment
+
+### Backend (FastAPI)
+```bash
+docker build -f Dockerfile-backend.txt -t beans-backend .
+docker run -p 8000:8000 beans-backend
+```
+
+### Frontend (Flask)
+```bash
+docker build -f Dockerfile-frontend.txt -t beans-frontend .
+docker run -p 5001:5001 beans-frontend
+```
+
+## 🌐 Web Application
+
+The Flask web interface provides:
+- Image upload functionality
+- Real-time disease prediction
+- Confidence scores for each class
+- User-friendly visualization of results
+
+## 📈 Monitoring & Tracking
+
+- **MLflow**: Tracks experiments, parameters, metrics, and model artifacts
+- **CodeCarbon**: Monitors CO₂ emissions during training
+- **Metrics**: Accuracy, loss, confusion matrix stored in `models/test_metrics.csv`
+
+## 🔗 Links
+- **Dataset**: [Beans on HuggingFace](https://huggingface.co/datasets/beans)
+
+---
+
+<div align="center">
+
+</div>
